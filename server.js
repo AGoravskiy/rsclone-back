@@ -25,7 +25,11 @@ app.use(staticContent);
 // инициализируем сокеты
 sockets.init(server);
 
+app.get('/', (req, res, next) => {
+   res.send('hello world')
+});
+
 // запускаем серверт
 server.listen(PORT, () => {
-   console.log(`server is run ${PORT}`)
+   console.log(`server is run http://localhost:${PORT}`)
 });
