@@ -4,7 +4,10 @@ module.exports = {
    init(server) {
       this.sessions = [];
       // отслеживает подключение и если подключился какой-то клиент(socket), то дай его id
-      this.io = socketIO(server);
+      this.io = socketIO(server, {cors: {
+         origin: "*",
+         methods: ["GET", "POST"]
+       }});
       this.io.on('connection', socket => {
          socket.on('playerMove', data => {
             this.onPlayerMove(socket, data);
