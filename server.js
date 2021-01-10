@@ -1,4 +1,4 @@
-const PORT = 3000;
+const PORT = process.env.PORT || 8080;
 
 const DOCROOT = './../dist/';
 
@@ -17,9 +17,9 @@ const server = http.createServer(app);
 
 // настраиваем отдачу игровых файлов при запросе к серверу
 
-const documentRoot = path.join(__dirname, DOCROOT);
-const staticContent = express.static(documentRoot);
-app.use(staticContent);
+// const documentRoot = path.join(__dirname, DOCROOT);
+// const staticContent = express.static(documentRoot);
+// app.use(staticContent);
 
 
 // инициализируем сокеты
