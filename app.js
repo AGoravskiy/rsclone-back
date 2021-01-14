@@ -4,6 +4,8 @@ require('dotenv').config();
 const routes = require('./routes/main');
 const secureRoutes = require('./routes/secure');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -25,9 +27,13 @@ mongoose.connection.on('connected', function () {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use(cookieParser());
+// require passport auth
+require('./auth/auth');
+
 // routes
 app.use('/', routes);
-app.use('/', secureRoutes);
+app.use('/', passport.authenticate('jwt', { session : false }), secureRoutes);
 
 // catch all other routes
 app.use((req, res, next) => {
