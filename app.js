@@ -3,11 +3,23 @@ require('dotenv').config();
 
 const routes = require('./routes/main');
 const secureRoutes = require('./routes/secure');
+const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 // create an instance of an express app
 const app = express();
+
+// setup mongo connection
+const uri = process.env.MONGO_CONNECTION_URL;
+mongoose.connect(uri, { useNewUrlParser : true, useCreateIndex: true });
+mongoose.connection.on('error', (error) => {
+  console.log(error);
+  process.exit(1);
+});
+mongoose.connection.on('connected', function () {
+  console.log('connected to mongo');
+});
 
 // update express settings
 app.use(bodyParser.urlencoded({ extended: false }));
