@@ -12,7 +12,7 @@ const app = express();
 
 // setup mongo connection
 const uri = process.env.MONGO_CONNECTION_URL;
-mongoose.connect(uri, { useNewUrlParser : true, useCreateIndex: true });
+mongoose.connect(uri, { useNewUrlParser : true, useCreateIndex: true, useUnifiedTopology: true });
 mongoose.connection.on('error', (error) => {
   console.log(error);
   process.exit(1);
