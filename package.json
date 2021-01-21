@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www.ts",
+    "start": "nodemon dist/bin/www.js",
     "build": "tsc",
     "postinstall": "npm run build"
   },
