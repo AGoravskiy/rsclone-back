@@ -3,7 +3,7 @@ import * as logger from 'morgan';
 import * as mongoose from 'mongoose';
 import usersRouter from './routes/users';
 import loginRouter from './routes/login';
-import singupRouter from './routes/singup';
+import signupRouter from './routes/signup';
 
 require('dotenv').config();
 
@@ -33,7 +33,7 @@ mongoose.connection.on('connected', () => {
 
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
-app.use('/singup', singupRouter);
+app.use('/signup', signupRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
