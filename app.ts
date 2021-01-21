@@ -2,10 +2,18 @@ import * as express from 'express';
 import * as logger from 'morgan';
 import * as mongoose from 'mongoose';
 import usersRouter from './routes/users';
+import loginRouter from './routes/login';
 
 require('dotenv').config();
 
 const app = express();
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST, PUT');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -23,6 +31,7 @@ mongoose.connection.on('connected', () => {
 });
 
 app.use('/users', usersRouter);
+app.use('/login', loginRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
