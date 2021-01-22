@@ -23,6 +23,23 @@
         "no-restricted-syntax": "off",
         "linebreak-style": "off",
         "global-require": 0,
-        "no-plusplus": "off"
+        "no-plusplus": "off",
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+              "js": "never",
+              "jsx": "never",
+              "ts": "never",
+              "tsx": "never"
+            }
+        ]
+    },
+    "settings": {
+        "import/resolver": {
+          "node": {
+            "extensions": [".js", ".jsx", ".ts", ".tsx"]
+          }
+        }
     }
 }
