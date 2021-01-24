@@ -17,10 +17,14 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  highScore : {
-    type: Number,
-    default: 0
-  }
+  games : [{
+    map: String,
+    car: String,
+    laps: Number,
+    time: Number,
+    bestLapTime: Number,
+    date: Date
+  }]
 });
 
 UserSchema.pre('save', async function (next) {

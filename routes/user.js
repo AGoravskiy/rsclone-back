@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -16,25 +15,6 @@ router.post('/signup', passport.authenticate('signup', { session: false }), asyn
 });
 
 router.post('/login', async (req, res, next) => {
-  // eslint-disable-next-line consistent-return
-  const { email, password } = req.body;
-  console.log(email);
-  if (email === 'test4@test.com' && password === '1234') {
-    const token = 'zalupa';
-    const refreshToken = '2zalupi';
-    res.status(200).json({
-      status: 'ok',
-      code: 200,
-      payload: {
-        token,
-        refreshToken,
-      },
-    });
-  } else {
-    res.status(401).json({ status: 'fail', code: 401, message: 'You are not authorized.' });
-  }
-
-  /*
   passport.authenticate('login', async (err, user, info) => {
     try {
       if (err || !user) {
@@ -67,7 +47,6 @@ router.post('/login', async (req, res, next) => {
       return next(error);
     }
   })(req, res, next);
-  */
 });
 
 router.post('/logout', (req, res) => {

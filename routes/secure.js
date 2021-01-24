@@ -4,14 +4,14 @@ const UserModel = require('../models/userModel');
 
 const router = express.Router();
 
-router.post('/submit-score', asyncMiddleware(async (req, res, next) => {
-  const { email, score } = req.body;
-  await UserModel.updateOne({ email }, { highScore: score });
+router.post('/submit-game', asyncMiddleware(async (req, res, next) => {
+  const { email, game } = req.body;
+  await UserModel.updateOne({ email }, { $push: { games: game } }, done);
   res.status(200).json({ 'status': 'ok' });
 }));
 
 router.get('/scores', asyncMiddleware(async (req, res, next) => {
-  const users = await UserModel.find({}, 'name highScore -_id').sort({ highScore: -1}).limit(10);
+  const users = await UserModel.find({}, 'name games -_id');
   res.status(200).json(users);
 }));
 
