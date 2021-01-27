@@ -41,6 +41,11 @@ app.use((req, res, next) => {
   res.json({ message: '404 - Not Found' });
 });
 
+app.use((req, res, next) => {
+  res.status(204);
+  res.json({ code: 204, message: '204' });
+});
+
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({ error: err });
