@@ -67,9 +67,9 @@ router.post('/token', (req, res) => {
     // update jwt
     res.cookie('jwt', token);
     tokenList[refreshToken].token = token;
-    res.status(200).json({ token, tokenList: tokenList });
+    res.status(200).json({ status: 'ok', code: 200, token, tokenList: tokenList });
   } else {
-    res.status(401).json({ message: 'Unauthorized', tokenList: tokenList });
+    res.status(401).json({ message: 'Unauthorized', status: 'fail', code: 401, tokenList: tokenList });
   }
 });
 
