@@ -40,8 +40,15 @@ passport.use('login', new localStrategy({
 passport.use(new JWTstrategy({
   secretOrKey: 'top_secret',
   jwtFromRequest(req) {
-    let token = null;
-    if (req && req.cookies) token = req.cookies.jwt;
+    if (!req || !req.headers || !req.headers.authorization) {
+      return null
+    }
+    const authorization = req.headers.authorization;
+    if (typeof authorization !== 'string' || !authorization.startsWith('Bearer')) {
+      return null;
+    }
+
+    const token = authorization.split(' ')[1];
     return token;
   },
 }, async (token, done) => {

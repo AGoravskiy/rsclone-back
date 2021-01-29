@@ -30,9 +30,6 @@ router.post('/login', async (req, res, next) => {
         console.log(body);
         const token = jwt.sign({ user: body }, 'top_secret', { expiresIn: 300 });
         const refreshToken = jwt.sign({ user: body }, 'top_secret_refresh', { expiresIn: 86400 });
-        // store tokens in cookie
-        res.cookie('jwt', token);
-        res.cookie('refreshJwt', refreshToken);
         // store tokens in memory
         tokenList[refreshToken] = {
           token,
