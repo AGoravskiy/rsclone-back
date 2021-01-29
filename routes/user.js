@@ -60,6 +60,7 @@ router.post('/logout', (req, res) => {
 });
 
 router.post('/token', (req, res) => {
+  /*
   const { email, refreshToken } = req.body;
   if ((refreshToken in tokenList) && (tokenList[refreshToken].email === email)) {
     const body = { email, _id: tokenList[refreshToken]._id };
@@ -71,6 +72,8 @@ router.post('/token', (req, res) => {
   } else {
     res.status(401).json({ message: 'Unauthorized', tokenList: tokenList });
   }
+  */
+  res.status(200).json({ body: req.body, tokenList: tokenList });
 });
 
 module.exports = router;
