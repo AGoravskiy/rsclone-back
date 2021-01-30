@@ -1,8 +1,20 @@
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const {
+  getTokenFromRequesst,
+  accessTokenKey,
+  refreshTokenKey,
+} = require('../utils/jwt');
 
-const tokenList = {};
+const tokenList = [];
+const getUserByAccessToken = (accessToken) => {
+  const desiredUser = tokenList.find(
+    (user) => user.accessToken === accessToken
+  );
+  return desiredUser || null;
+};
+
 const router = express.Router();
 
 router.get('/status', (req, res, next) => {
@@ -10,9 +22,15 @@ router.get('/status', (req, res, next) => {
   res.json({ status: 'ok' });
 });
 
-router.post('/signup', passport.authenticate('signup', { session: false }), async (req, res, next) => {
-  res.status(200).json({ status: 'ok', code: 200, message: 'signup successful' });
-});
+router.post(
+  '/signup',
+  passport.authenticate('signup', { session: false }),
+  async (req, res, next) => {
+    res
+      .status(200)
+      .json({ status: 'ok', code: 200, message: 'signup successful' });
+  }
+);
 
 router.post('/login', async (req, res, next) => {
   passport.authenticate('login', async (err, user, info) => {
@@ -28,17 +46,23 @@ router.post('/login', async (req, res, next) => {
           email: user.email,
         };
         console.log(body);
-        const token = jwt.sign({ user: body }, 'top_secret', { expiresIn: 300 });
-        const refreshToken = jwt.sign({ user: body }, 'top_secret_refresh', { expiresIn: 86400 });
+        const token = jwt.sign({ user: body }, accessTokenKey, {
+          expiresIn: 300,
+        });
+        const refreshToken = jwt.sign({ user: body }, refreshTokenKey, {
+          expiresIn: 86400,
+        });
         // store tokens in memory
-        tokenList[refreshToken] = {
+        tokenList.push({
           token,
           refreshToken,
           email: user.email,
           _id: user._id,
-        };
+        });
         // Send back the token to the user
-        return res.status(200).json({ status: 'ok', code: 200, token, refreshToken });
+        return res
+          .status(200)
+          .json({ status: 'ok', code: 200, token, refreshToken });
       });
     } catch (error) {
       return next(error);
@@ -47,27 +71,47 @@ router.post('/login', async (req, res, next) => {
 });
 
 router.post('/logout', (req, res) => {
-  if (req.cookies) {
-    const refreshToken = req.cookies.refreshJwt;
-    if (refreshToken in tokenList) delete tokenList[refreshToken];
-    res.clearCookie('refreshJwt');
-    res.clearCookie('jwt');
+  const accessToken = getTokenFromRequesst(req);
+  const desiredUserIndex = tokenList.findIndex(
+    (user) => user.accessToken === accessToken
+  );
+  if (desiredUserIndex !== -1) {
+    tokenList.splice(desiredUserIndex, 1);
   }
   res.status(200).json({ message: 'logged out' });
 });
 
-router.post('/token', (req, res) => {
-  const { email, refreshToken } = req.body;
-  if ((refreshToken in tokenList) && (tokenList[refreshToken].email === email)) {
-    const body = { email, _id: tokenList[refreshToken]._id };
-    const token = jwt.sign({ user: body }, 'top_secret', { expiresIn: 300 });
-    // update jwt
-    res.cookie('jwt', token);
-    tokenList[refreshToken].token = token;
-    res.status(200).json({ status: 'ok', code: 200, token, tokenList: tokenList });
-  } else {
-    res.status(401).json({ message: 'Unauthorized', status: 'fail', code: 401, tokenList: tokenList });
+router.post('/check-token', (req, res) => {
+  try {
+    const accessToken = getTokenFromRequesst(req);
+    if (!accessToken) {
+      throw new Error('Token is missing');
+    }
+    const { _id, email } = jwt.decode(accessToken);
+    const desiredUser = getUserByAccessToken(accessToken);
+    if (desiredUser !== null) {
+      const user = { email, _id };
+      const token = jwt.sign({ user }, accessTokenKey, {
+        expiresIn: 300,
+      });
+      res.status(200).json({ status: 'ok', code: 200 });
+    } else {
+      res.status(401).json({
+        message: 'Unauthorized',
+        status: 'fail',
+        code: 401,
+        tokenList: tokenList,
+      });
+    }
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
+});
+
+router.post('/refresh-token', (req, res, next) => {
+  const { refreshToken } = req.body;
+  const { _id, email } = jwt.decode(refreshToken);
+  console.log('🚀 ~ file: user.js ~ line 112 ~ router.post ~ email', email);
 });
 
 module.exports = router;
