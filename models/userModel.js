@@ -20,9 +20,9 @@ const UserSchema = new Schema({
   games : [{
     map: String,
     car: String,
-    laps: Number,
-    time: Number,
-    bestLapTime: Number,
+    laps: String,
+    time: String,
+    bestLapTime: String,
     date: Date
   }]
 });
