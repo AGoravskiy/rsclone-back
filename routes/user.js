@@ -35,7 +35,12 @@ router.post(
 router.post('/login', async (req, res, next) => {
   passport.authenticate('login', async (err, user, info) => {
     try {
-      if (err || !user) {
+      if (!user) {
+        return res
+          .status(401)
+          .json({ status: 'fail', code: 401, message: 'Email or Password is incorrect' });
+      }
+      if (err) {
         const error = new Error('An Error occured');
         return next(error);
       }
