@@ -9,6 +9,7 @@ const http = require('http');
 const path = require('path');
 const secureRoutes = require('./routes/secure');
 const userRoutes = require('./routes/user');
+const multiRoutes = require('./routes/user');
 const sockets = require('./sockets');
 const cors = require('cors');
 
@@ -35,6 +36,7 @@ require('./auth/auth');
 
 app.use('/user', userRoutes);
 app.use('/', passport.authenticate('jwt', { session: false }), secureRoutes);
+app.use('/multi', passport.authenticate('jwt', { session: false }), multiRoutes);
 
 app.use((req, res, next) => {
   res.status(404);
