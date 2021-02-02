@@ -19,13 +19,11 @@ const setUserAccessToken = (accessToken, email) => {
   return user;
 };
 
-const signData = (body, tokenType = 'ACCESS') => {
-  return jwt.sign(
-    body,
-    tokenType === 'ACCESS' ? accessTokenKey : refreshTokenKey,
-    { expiresIn: tokenType === 'ACCESS' ? 300 : 86400 }
-  );
-};
+const signData = (body, tokenType = 'ACCESS') => jwt.sign(
+  body,
+  tokenType === 'ACCESS' ? accessTokenKey : refreshTokenKey,
+  { expiresIn: tokenType === 'ACCESS' ? 300 : 86400 },
+);
 
 const router = express.Router();
 
@@ -41,7 +39,7 @@ router.post(
     res
       .status(200)
       .json({ status: 'ok', code: 200, message: 'signup successful' });
-  }
+  },
 );
 
 router.post('/login', async (req, res, next) => {
@@ -75,7 +73,9 @@ router.post('/login', async (req, res, next) => {
         // Send back the token to the user
         return res
           .status(200)
-          .json({ status: 'ok', code: 200, token, refreshToken });
+          .json({
+            status: 'ok', code: 200, token, refreshToken,
+          });
       });
     } catch (error) {
       return next(error);
@@ -86,7 +86,7 @@ router.post('/login', async (req, res, next) => {
 router.post('/logout', (req, res) => {
   const accessToken = getTokenFromRequesst(req);
   const desiredUserIndex = tokenList.findIndex(
-    (user) => user.accessToken === accessToken
+    (user) => user.accessToken === accessToken,
   );
   if (desiredUserIndex !== -1) {
     tokenList.splice(desiredUserIndex, 1);
@@ -113,7 +113,7 @@ router.get('/check-token', (req, res) => {
         message: 'Unauthorized',
         status: 'fail',
         code: 401,
-        tokenList: tokenList,
+        tokenList,
       });
     }
   } catch (e) {
@@ -142,7 +142,9 @@ router.post('/refresh-token', (req, res, next) => {
     setUserAccessToken(accessToken, user.email);
     res
       .status(200)
-      .json({ status: 'ok', code: 200, accessToken, refreshToken });
+      .json({
+        status: 'ok', code: 200, accessToken, refreshToken,
+      });
   } catch (e) {
     res.status(400).json({ status: 'fail', error: e.message });
   }

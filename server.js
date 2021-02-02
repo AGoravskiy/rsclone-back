@@ -7,11 +7,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const path = require('path');
+const cors = require('cors');
 const secureRoutes = require('./routes/secure');
 const userRoutes = require('./routes/user');
 const multiRoutes = require('./routes/user');
 const sockets = require('./sockets');
-const cors = require('cors');
 
 const uri = process.env.MONGO_CONNECTION_URL;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });

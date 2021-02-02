@@ -21,8 +21,8 @@ passport.use(
       } catch (error) {
         done(error);
       }
-    }
-  )
+    },
+  ),
 );
 
 // handle user login
@@ -47,8 +47,8 @@ passport.use(
       } catch (error) {
         return done(error);
       }
-    }
-  )
+    },
+  ),
 );
 // verify token is valid
 passport.use(
@@ -65,6 +65,6 @@ passport.use(
       } catch (error) {
         done(error);
       }
-    }
-  )
+    },
+  ),
 );

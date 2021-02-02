@@ -10,11 +10,11 @@ router.post(
     const { email, game } = req.body;
     const queryResult = await UserModel.updateOne(
       { email },
-      { $push: { games: game } }
+      { $push: { games: game } },
       // done
     );
     res.status(200).json({ status: 'ok' });
-  })
+  }),
 );
 
 router.get(
@@ -22,7 +22,7 @@ router.get(
   asyncMiddleware(async (req, res, next) => {
     const users = await UserModel.find({}, 'name games -_id');
     res.status(200).json(users);
-  })
+  }),
 );
 
 module.exports = router;

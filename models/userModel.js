@@ -1,30 +1,30 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const UserSchema = new Schema({
-  email : {
-    type : String,
-    required : true,
-    unique : true
-  },
-  password : {
-    type : String,
-    required : true
-  },
-  name : {
+  email: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
-  games : [{
+  password: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  games: [{
     map: String,
     car: String,
     laps: String,
     time: String,
     bestLapTime: String,
-    date: Date
-  }]
+    date: Date,
+  }],
 });
 
 UserSchema.pre('save', async function (next) {
@@ -38,7 +38,7 @@ UserSchema.methods.isValidPassword = async function (password) {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
   return compare;
-}
+};
 
 const UserModel = mongoose.model('user', UserSchema);
 
