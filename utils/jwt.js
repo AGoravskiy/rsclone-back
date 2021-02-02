@@ -2,10 +2,10 @@ module.exports.getTokenFromRequesst = (req) => {
   if (!req || !req.headers || !req.headers.authorization) {
     return null;
   }
-  const authorization = req.headers.authorization;
+  const { authorization } = req.headers;
   if (
-    typeof authorization !== 'string' ||
-    !authorization.startsWith('Bearer')
+    typeof authorization !== 'string'
+    || !authorization.startsWith('Bearer')
   ) {
     return null;
   }

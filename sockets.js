@@ -20,8 +20,8 @@ module.exports = {
   },
 
   onPlayerMove(socket, data) {
-    const session = this.sessions.find((session) => session.playerSocket === socket
-      || session.enemySocket === socket);
+    const session = this.sessions.find((s) => s.playerSocket === socket
+      || s.enemySocket === socket);
     if (session) {
       let opponentSocket;
       if (session.playerSocket === socket) {
